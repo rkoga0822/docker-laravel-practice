@@ -1,0 +1,57 @@
+services:
+  database:
+    image: postgres:17
+    container_name: database
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: laravel_sample
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  php:
+    container_name: php
+    build:
+      context: .
+    expose:
+      - '9000'
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - database
+
+  apache:
+    container_name: apache
+    build: 
+      context: ./apache
+    ports:
+      - '8080:80'
+    volumes:
+      - ./:/var/www/html
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+    depends_on:
+      - php
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+    ports:
+      - "5050:80"
+    depends_on:
+      - database
+
+  adminer:
+    image: adminer
+    ports:
+      - "8082:8080"
+  
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"

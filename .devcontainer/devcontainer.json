@@ -1,0 +1,14 @@
+{
+  "name": "Laravel Docker Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "php",
+  "workspaceFolder": "/var/www/html",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "onecentlin.laravel-blade"
+      ]
+    }
+  }
+}
